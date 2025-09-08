@@ -5,14 +5,12 @@ file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
 
 set(LIBRARY_NAME utf8)
 
-if(MSVC)
-  if (UTF8_STATIC_WINDOWS_RUNTIME)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    set(LIBRARY_NAME utf8s)
-  endif()
+if(MSVC AND UTF8_STATIC_WINDOWS_RUNTIME)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+  set(LIBRARY_NAME utf8s)
+else()
+  find_package(ICU REQUIRED COMPONENTS uc in dt)
 endif()
-
-find_package(ICU REQUIRED COMPONENTS uc in dt)
 
 add_library(${LIBRARY_NAME} STATIC ${SOURCES} ${HEADERS})
 
